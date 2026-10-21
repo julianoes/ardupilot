@@ -759,16 +759,9 @@ void GCS_MAVLINK_Rover::handle_set_position_target_global_int(const mavlink_mess
         return;
     }
     // check for supported coordinate frames
-    switch (packet.coordinate_frame) {
-    case MAV_FRAME_GLOBAL:
-    case MAV_FRAME_GLOBAL_INT:
-    case MAV_FRAME_GLOBAL_RELATIVE_ALT:
-    case MAV_FRAME_GLOBAL_RELATIVE_ALT_INT:
-    case MAV_FRAME_GLOBAL_TERRAIN_ALT:
-    case MAV_FRAME_GLOBAL_TERRAIN_ALT_INT:
-        break;
-
-    default:
+    // Rover ignores the altitude, so alt_frame is unused: the call is the frame check
+    Location::AltFrame alt_frame;
+    if (!mavlink_coordinate_frame_to_location_alt_frame((MAV_FRAME)packet.coordinate_frame, alt_frame)) {
         return;
     }
     
